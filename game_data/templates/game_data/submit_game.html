@@ -1,0 +1,9 @@
+<h1>Submit Game</h1>
+
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+<form action="{% url 'game_data:submit_game' %}" method="post">
+	{% csrf_token %}
+	{{ form.as_p }}
+	<input type="submit" value="Submit" />
+</form>

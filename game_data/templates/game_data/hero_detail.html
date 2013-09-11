@@ -1,0 +1,25 @@
+<h1>{{ hero }}</h1>
+
+{% if hero_game_list %}
+	<table>
+	<tr>
+		<td><strong>Player</strong></td>
+		<td><strong>Hero</strong></td>
+		<td><strong>Last Hits</strong></td>
+		<td><strong>GPM</strong></td>
+		<td><strong>Published</strong></td>
+	</tr>
+    {% for game in hero_game_list %}
+		<tr>
+			<td><a href="{% url 'game_data:player_detail' game.player.player_name %}">{{ game.player.player_name }}</a></td>
+			<td>{{ game.hero.hero_name }}</td>
+			<td>{{ game.last_hits }}</td>
+			<td>{{ game.gpm }}</td>
+			<td>{{ game.pub_date }}</td>
+		</tr>
+    {% endfor %}
+	</table>
+    
+{% else %}
+    <p>No games available.</p>
+{% endif %}
