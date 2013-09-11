@@ -1,0 +1,15 @@
+<h1>Team Loller Learns To Last Hit!</h1>
+
+<a href="{% url 'game_data:submit_game' %}">Submit game data</a>
+
+<p></p>
+
+{% if hero_list %}
+    <ul>
+    {% for hero in hero_list %}
+        <li><a href="{% url 'game_data:hero_detail' hero.hero_name %}">{{ hero.hero_name }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No heroes are available.</p>
+{% endif %}
