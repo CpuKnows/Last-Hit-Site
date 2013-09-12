@@ -1,4 +1,6 @@
 <h1>{{ player }}&nbsp{{player.overall_rank}}</h1>
+<a href="{% url 'game_data:index' %}">Home</a>
+<br/><br/>
 
 {% if player_game_list %}
 	<table>
