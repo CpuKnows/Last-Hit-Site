@@ -4,6 +4,33 @@
 
 <p></p>
 
+{% if latest_game_list %}
+    <table>
+	<tr>
+		<td><strong>Player</strong></td>
+		<td><strong>Hero</strong></td>
+		<td><strong>Last Hits</strong></td>
+		<td><strong>GPM</strong></td>
+		<td><strong>Published</strong></td>
+	</tr>
+    {% for game in latest_game_list %}
+		<tr>
+			<td><a href="{% url 'game_data:player_detail' game.player.player_name %}">{{ game.player.player_name }}</a></td>
+			<td><a href="{% url 'game_data:hero_detail' game.hero.hero_name %}">{{ game.hero.hero_name }}</a></td>
+			<td>{{ game.last_hits }}</td>
+			<td>{{ game.gpm }}</td>
+			<td>{{ game.pub_date }}</td>
+		</tr>
+    {% endfor %}
+	</table>
+	
+{% else %}
+    <p>No recent games.</p>
+{% endif %}
+
+<p><br/></p>
+
+<p>Heroes</p>
 {% if hero_list %}
     <ul>
     {% for hero in hero_list %}
