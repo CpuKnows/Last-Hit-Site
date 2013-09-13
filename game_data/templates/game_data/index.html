@@ -1,8 +1,9 @@
-<h1>Team Loller Learns To Last Hit!</h1>
+{% extends "game_data/base.html" %}
 
-<a href="{% url 'game_data:submit_game' %}">Submit game data</a>
+{% block title %}Team Loller Learns To Last Hit!{% endblock %}
 
-<p></p>
+
+{% block content %}
 
 {% if latest_game_list %}
     <table>
@@ -28,7 +29,7 @@
     <p>No recent games.</p>
 {% endif %}
 
-<p><br/></p>
+<br/><br/>
 
 <p>Heroes</p>
 {% if hero_list %}
@@ -40,3 +41,5 @@
 {% else %}
     <p>No heroes are available.</p>
 {% endif %}
+
+{% endblock content%}

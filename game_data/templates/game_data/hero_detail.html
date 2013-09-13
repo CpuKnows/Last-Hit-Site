@@ -1,6 +1,9 @@
-<h1>{{ hero }}</h1>
-<a href="{% url 'game_data:index' %}">Home</a>
-<br/><br/>
+{% extends "game_data/base.html" %}
+
+{% block title %}{{ hero }}{% endblock %}
+
+
+{% block content %}
 
 {% if hero_game_list %}
 	<table>
@@ -25,3 +28,5 @@
 {% else %}
     <p>No games available.</p>
 {% endif %}
+
+{% endblock content%}

@@ -1,4 +1,9 @@
-<h1>Submit Game</h1>
+{% extends "game_data/base.html" %}
+
+{% block title %}Submit Game{% endblock %}
+
+
+{% block content %}
 
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
@@ -7,3 +12,5 @@
 	{{ form.as_p }}
 	<input type="submit" value="Submit" />
 </form>
+
+{% endblock content%}

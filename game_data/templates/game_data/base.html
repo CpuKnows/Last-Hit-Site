@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<!-- <link rel="stylesheet" href="style.css" /> -->
+	<h1>{% block title %}Lorem Ipsum{% endblock %}</h1>
+
+	<a href="{% url 'game_data:index' %}">Home</a>&nbsp;&nbsp;&nbsp;&nbsp;
+	<a href="{% url 'game_data:submit_game' %}">Submit Game</a>
+	<br/><br/>
+</head>
+
+<body>
+	<div id="content">
+		{% block content %}
+		{% endblock %}
+	</div>
+</body>
+
+<footer>
+	<br/><br/>
+	<a href="{% url 'game_data:index' %}">Home</a>&nbsp;&nbsp;&nbsp;&nbsp;
+	<a href="{% url 'game_data:submit_game' %}">Submit Game</a>
+	<br/><br/>
+	<p>John Maxwell &copy;2013</p>
+</footer>
