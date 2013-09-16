@@ -13,6 +13,7 @@ class Hero(models.Model):
 	player = models.ForeignKey(Player)
 	hero_name = models.CharField(max_length = 50)
 	rank_number = models.PositiveIntegerField()
+	hero_name_underscored = models.CharField(max_length = 60)
 	
 	def __unicode__(self):
 		return self.hero_name

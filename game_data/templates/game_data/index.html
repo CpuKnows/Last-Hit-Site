@@ -1,5 +1,5 @@
 {% extends "game_data/base.html" %}
-
+{% load staticfiles %}
 {% block title %}Team Loller Learns To Last Hit!{% endblock %}
 
 
@@ -8,16 +8,20 @@
 {% if latest_game_list %}
     <table>
 	<tr>
-		<td><strong>Player</strong></td>
 		<td><strong>Hero</strong></td>
+		<td><strong>Player</strong></td>
 		<td><strong>Last Hits</strong></td>
 		<td><strong>GPM</strong></td>
 		<td><strong>Published</strong></td>
 	</tr>
     {% for game in latest_game_list %}
 		<tr>
+			<td><a href="{% url 'game_data:hero_detail' game.hero.hero_name %}">
+				<img id="base_{{game.hero.hero_name_underscored}}" 
+					src="{% static 'game_data/image/'|add:game.hero.hero_name_underscored|add:'_sb.png' %}">
+				</a>
+			</td>
 			<td><a href="{% url 'game_data:player_detail' game.player.player_name %}">{{ game.player.player_name }}</a></td>
-			<td><a href="{% url 'game_data:hero_detail' game.hero.hero_name %}">{{ game.hero.hero_name }}</a></td>
 			<td>{{ game.last_hits }}</td>
 			<td>{{ game.gpm }}</td>
 			<td>{{ game.pub_date }}</td>
@@ -33,13 +37,28 @@
 
 <p>Heroes</p>
 {% if hero_list %}
-    <ul>
     {% for hero in hero_list %}
-        <li><a href="{% url 'game_data:hero_detail' hero.hero_name %}">{{ hero.hero_name }}</a></li>
+		<a href="{% url 'game_data:hero_detail' hero.hero_name %}">
+		<img id="base_{{hero.hero_name_underscored}}" 
+					src="{% static 'game_data/image/'|add:hero.hero_name_underscored|add:'_sb.png' %}">
+		</a>
+		{% if forloop.counter in hero_table_widths %}
+			<br/>
+		{% endif %}
     {% endfor %}
-    </ul>
 {% else %}
     <p>No heroes are available.</p>
 {% endif %}
+<br/><br/>
+
+<p>Players</p>
+{% if player_list %}
+    {% for player in player_list %}
+		<a href="{% url 'game_data:player_detail' player.player_name %}">{{ player.player_name }}</a>
+    {% endfor %}
+{% else %}
+    <p>No players are available.</p>
+{% endif %}
+<br/><br/>
 
 {% endblock content%}

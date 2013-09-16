@@ -18,6 +18,8 @@ class IndexView(generic.ListView):
 	def get_context_data(self, **kwargs):
 		context = super(IndexView, self).get_context_data(**kwargs)
 		context['hero_list'] = Hero.objects.all()
+		context['player_list'] = Player.objects.all()
+		context['hero_table_widths'] = range(0, 200, 5)
 		return context
 		
 	

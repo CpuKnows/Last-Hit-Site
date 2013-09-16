@@ -11,10 +11,10 @@ class PlayerAdmin(admin.ModelAdmin):
 
 class HeroAdmin(admin.ModelAdmin):
 	fieldsets = [
-        (None,               {'fields': ['hero_name']}),
+        (None,               {'fields': [('hero_name', 'hero_name_underscored')]}),
 		('Rank / Player', {'fields': [('rank_number', 'player')]}),
     ]
-	list_display = ('hero_name', 'rank_number', 'player')
+	list_display = ('hero_name', 'hero_name_underscored', 'rank_number', 'player')
 	search_fields = ['hero_name']
 	
 class GamesAdmin(admin.ModelAdmin):

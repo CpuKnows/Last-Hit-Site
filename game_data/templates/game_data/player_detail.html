@@ -1,5 +1,5 @@
 {% extends "game_data/base.html" %}
-
+{% load staticfiles %}
 {% block title %}{{ player }}&nbsp{{player.overall_rank}}{% endblock %}
 
 
@@ -8,7 +8,6 @@
 {% if player_game_list %}
 	<table>
 	<tr>
-		<td><strong>Player</strong></td>
 		<td><strong>Hero</strong></td>
 		<td><strong>Last Hits</strong></td>
 		<td><strong>GPM</strong></td>
@@ -16,8 +15,11 @@
 	</tr>
     {% for game in player_game_list %}
 		<tr>
-			<td>{{ game.player.player_name }}</td>
-			<td><a href="{% url 'game_data:hero_detail' game.hero.hero_name %}">{{ game.hero.hero_name }}</a></td>
+			<td><a href="{% url 'game_data:hero_detail' game.hero.hero_name %}">
+				<img id="base_{{game.hero.hero_name_underscored}}" 
+					src="{% static 'game_data/image/'|add:game.hero.hero_name_underscored|add:'_sb.png' %}">
+				</a>
+			</td>
 			<td>{{ game.last_hits }}</td>
 			<td>{{ game.gpm }}</td>
 			<td>{{ game.pub_date }}</td>
