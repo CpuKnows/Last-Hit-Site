@@ -1,13 +1,16 @@
 {% extends "game_data/base.html" %}
 
-{% block title %}{{ hero }}{% endblock %}
+{% block title %}{{ hero.hero_name }}{% endblock %}
 
 
 {% block content %}
 
+<h2>Most Recent Games</h2>
+
 {% if hero_game_list %}
 	<table>
 	<tr>
+		<td><strong>Rank</strong></td>
 		<td><strong>Player</strong></td>
 		<td><strong>Last Hits</strong></td>
 		<td><strong>GPM</strong></td>
@@ -15,7 +18,12 @@
 	</tr>
     {% for game in hero_game_list %}
 		<tr>
-			<td><a href="{% url 'game_data:player_detail' game.player.player_name %}">{{ game.player.player_name }}</a></td>
+			{% if game.rank_number == None %}
+				<td></td>
+			{% else %}
+				<td>{{ game.rank_number }}</td>
+			{% endif %}
+			<td><a href="{% url 'game_data:player_detail' game.player.player_name_underscored %}">{{ game.player.player_name }}</a></td>
 			<td>{{ game.last_hits }}</td>
 			<td>{{ game.gpm }}</td>
 			<td>{{ game.pub_date }}</td>

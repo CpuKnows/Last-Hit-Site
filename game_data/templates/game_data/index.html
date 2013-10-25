@@ -8,6 +8,7 @@
 {% if latest_game_list %}
     <table>
 	<tr>
+		<td><strong>Rank</strong></td>
 		<td><strong>Hero</strong></td>
 		<td><strong>Player</strong></td>
 		<td><strong>Last Hits</strong></td>
@@ -16,12 +17,17 @@
 	</tr>
     {% for game in latest_game_list %}
 		<tr>
-			<td><a href="{% url 'game_data:hero_detail' game.hero.hero_name %}">
+			{% if game.rank_number == None %}
+				<td></td>
+			{% else %}
+				<td>{{ game.rank_number }}</td>
+			{% endif %}
+			<td><a href="{% url 'game_data:hero_detail' game.hero.hero_name_underscored %}">
 				<img id="base_{{game.hero.hero_name_underscored}}" 
 					src="{% static 'game_data/image/'|add:game.hero.hero_name_underscored|add:'_sb.png' %}">
 				</a>
 			</td>
-			<td><a href="{% url 'game_data:player_detail' game.player.player_name %}">{{ game.player.player_name }}</a></td>
+			<td><a href="{% url 'game_data:player_detail' game.player.player_name_underscored %}">{{ game.player.player_name }}</a></td>
 			<td>{{ game.last_hits }}</td>
 			<td>{{ game.gpm }}</td>
 			<td>{{ game.pub_date }}</td>
@@ -38,7 +44,7 @@
 <p>Heroes</p>
 {% if hero_list %}
     {% for hero in hero_list %}
-		<a href="{% url 'game_data:hero_detail' hero.hero_name %}">
+		<a href="{% url 'game_data:hero_detail' hero.hero_name_underscored %}">
 		<img id="base_{{hero.hero_name_underscored}}" 
 					src="{% static 'game_data/image/'|add:hero.hero_name_underscored|add:'_sb.png' %}">
 		</a>
@@ -54,7 +60,7 @@
 <p>Players</p>
 {% if player_list %}
     {% for player in player_list %}
-		<a href="{% url 'game_data:player_detail' player.player_name %}">{{ player.player_name }}</a>
+		<a href="{% url 'game_data:player_detail' player.player_name_underscored %}">{{ player.player_name }}</a><br/>
     {% endfor %}
 {% else %}
     <p>No players are available.</p>
