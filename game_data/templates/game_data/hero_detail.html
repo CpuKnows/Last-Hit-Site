@@ -23,7 +23,7 @@
 			{% else %}
 				<td>{{ game.rank_number }}</td>
 			{% endif %}
-			<td><a href="{% url 'game_data:player_detail' game.player.player_name_underscored %}">{{ game.player.player_name }}</a></td>
+			<td><a href="{% url 'game_data:player_detail' game.player.pk %}">{{ game.player.player_acct.gamer_tag }}</a></td>
 			<td>{{ game.last_hits }}</td>
 			<td>{{ game.gpm }}</td>
 			<td>{{ game.pub_date }}</td>

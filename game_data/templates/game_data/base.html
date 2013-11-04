@@ -4,7 +4,9 @@
 	<h1>{% block title %}Lorem Ipsum{% endblock %}</h1>
 
 	<a href="{% url 'game_data:index' %}">Home</a>&nbsp;&nbsp;&nbsp;&nbsp;
-	<a href="{% url 'game_data:submit_game' %}">Submit Game</a>
+	<a href="{% url 'game_data:submit_game' %}">Submit Game</a>&nbsp;&nbsp;&nbsp;&nbsp;
+    <a href="{% url 'game_data:login' %}">Login</a>&nbsp;&nbsp;&nbsp;&nbsp;
+    <a href="{% url 'game_data:sign_up' %}">Sign Up</a>&nbsp;&nbsp;&nbsp;&nbsp;
 	
 	{% load staticfiles %}
 	<link href="{% static 'game_data/css/styles.css' %}" rel="stylesheet" type="text/css">
@@ -19,7 +21,9 @@
 
 <footer>
 	<a href="{% url 'game_data:index' %}">Home</a>&nbsp;&nbsp;&nbsp;&nbsp;
-	<a href="{% url 'game_data:submit_game' %}">Submit Game</a>
+	<a href="{% url 'game_data:submit_game' %}">Submit Game</a>&nbsp;&nbsp;&nbsp;&nbsp;
+    <a href="{% url 'game_data:login' %}">Login</a>&nbsp;&nbsp;&nbsp;&nbsp;
+    <a href="{% url 'game_data:sign_up' %}">Sign Up</a>&nbsp;&nbsp;&nbsp;&nbsp;
 	<br/><br/>
 	<p>John Maxwell &copy;2013</p>
 </footer>

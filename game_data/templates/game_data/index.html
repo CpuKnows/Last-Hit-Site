@@ -27,7 +27,7 @@
 					src="{% static 'game_data/image/'|add:game.hero.hero_name_underscored|add:'_sb.png' %}">
 				</a>
 			</td>
-			<td><a href="{% url 'game_data:player_detail' game.player.player_name_underscored %}">{{ game.player.player_name }}</a></td>
+			<td><a href="{% url 'game_data:player_detail' game.player.pk %}">{{ game.player.player_acct.gamer_tag }}</a></td>
 			<td>{{ game.last_hits }}</td>
 			<td>{{ game.gpm }}</td>
 			<td>{{ game.pub_date }}</td>
@@ -60,7 +60,7 @@
 <p>Players</p>
 {% if player_list %}
     {% for player in player_list %}
-		<a href="{% url 'game_data:player_detail' player.player_name_underscored %}">{{ player.player_name }}</a><br/>
+		<a href="{% url 'game_data:player_detail' player.pk %}">{{ player.player_acct.gamer_tag }}</a><br/>
     {% endfor %}
 {% else %}
     <p>No players are available.</p>
