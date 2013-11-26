@@ -17,7 +17,7 @@ class HeroForm(ModelForm):
 class GameForm(ModelForm):
 	class Meta:
 		model = Game
-		fields = ['player', 'hero', 'last_hits', 'gpm']
+		fields = ['hero', 'last_hits', 'gpm']
 
 
 class DotaUserCreationForm(ModelForm):

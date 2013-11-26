@@ -1,7 +1,7 @@
 from django.conf.urls import patterns, url
 from django.views.generic.base import TemplateView
 
-from .views import IndexView, HeroDetail, PlayerDetail, GameCreate, UserLogin, UserCreation
+from .views import IndexView, HeroDetail, PlayerDetail, GameCreate, UserLogin, UserCreation, UserLogout
 
 urlpatterns = patterns('',
                        url(r'^$', IndexView.as_view(), name='index'),
@@ -10,4 +10,5 @@ urlpatterns = patterns('',
                        url(r'^hero/(?P<hero_name_underscored>[\w-]+)/$', HeroDetail.as_view(), name='hero_detail'),
                        url(r'^player/(?P<pk>[\w-]+)/$', PlayerDetail.as_view(), name='player_detail'),
                        url(r'^login/$', UserLogin.as_view(), name='login'),
-                       url(r'^sign_up/$', UserCreation.as_view(), name='sign_up'))
+                       url(r'^sign_up/$', UserCreation.as_view(), name='sign_up'),
+                       url(r'^logout/$', UserLogout.as_view(), name='logout'))

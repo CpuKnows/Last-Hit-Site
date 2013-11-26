@@ -158,4 +158,5 @@ LOGGING = {
 }
 
 AUTH_USER_MODEL = "game_data.DotaUser"
-LOGIN_REDIRECT_URL = '/game_data/'
+LOGIN_REDIRECT_URL = 'game_data:index'
+LOGIN_URL = 'game_data:login'
