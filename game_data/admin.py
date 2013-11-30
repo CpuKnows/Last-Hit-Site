@@ -5,7 +5,7 @@ from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
 from .forms import DotaUserCreationForm
 from .models import Player, Hero, Game, DotaUser
-from .rank_logic import delete_update_hero_rank
+from .rank_logic import delete_update_hero_rank, delete_update_player_rank
 
 
 class PlayerAdmin(admin.ModelAdmin):
@@ -38,9 +38,14 @@ class GameAdmin(admin.ModelAdmin):
 		return actions
 	
 	def delete_model(self, request, queryset):
+		players_to_update = []
 		for obj in queryset:
 			delete_update_hero_rank(obj)
+			if obj.player not in players_to_update:
+				players_to_update.append(obj.player)
 		queryset.delete()
+		for player in players_to_update:
+			delete_update_player_rank(player)
 	delete_model.short_description = 'Delete selected'
 
 

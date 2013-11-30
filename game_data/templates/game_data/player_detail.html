@@ -32,7 +32,7 @@
 			</td>
 			<td>{{ game.last_hits }}</td>
 			<td>{{ game.gpm }}</td>
-			<td>{{ game.pub_date }}</td>
+			<td>{{ game.pub_date|timesince }}</td>
 		</tr>
     {% endfor %}
 	</table>

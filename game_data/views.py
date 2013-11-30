@@ -11,7 +11,7 @@ from braces.views import LoginRequiredMixin
 
 from .forms import PlayerForm, GameForm, DotaUserCreationForm
 from .models import Player, Hero, Game, DotaUser
-from .rank_logic import add_update_hero_ranking, update_player_rank
+from .rank_logic import add_update_hero_ranking, add_update_player_rank
 
 
 class IndexView(ListView):
@@ -68,7 +68,7 @@ class GameCreate(LoginRequiredMixin, CreateView):
 	def get_success_url(self):
 		if self.submitted_game:
 			add_update_hero_ranking(self.submitted_game)
-			update_player_rank(self.submitted_game)
+			add_update_player_rank(self.submitted_game.player)
 		return super(GameCreate, self).get_success_url()
 
 

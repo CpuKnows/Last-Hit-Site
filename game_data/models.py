@@ -17,6 +17,10 @@ class PlayerManager(models.Manager):
 	def ranked(self, **kwargs):
 		return self.filter(overall_rank__isnull=False, **kwargs)
 
+	def worse_rank(self, rank):
+		results = self.filter(overall_rank__isnull=False)
+		return results.filter(Q(overall_rank__gt=rank))
+
 	def worse_avg(self, avg_last_hits, avg_gpm):
 		results = self.filter(overall_rank__isnull=False)
 		return results.filter(Q(avg_last_hits=avg_last_hits, avg_gpm__lt=avg_gpm) | Q(avg_last_hits__lt=avg_last_hits))
@@ -50,8 +54,10 @@ class GameManager(models.Manager):
 	def worse_rank(self, hero, rank):
 		return self.filter(hero=hero, rank_number__isnull=False).filter(rank_number__gt=rank)
 
-	def worse_games(self, last_hits, gpm):
-		return self.filter(Q(last_hits=last_hits, gpm__lt=gpm) | Q(last_hits__lt=last_hits))
+	def worse_games(self, hero, last_hits, gpm):
+		ret_filter = self.filter(Q(last_hits=last_hits, gpm__lt=gpm) | Q(last_hits__lt=last_hits))
+		ret_filter = ret_filter.filter(hero=hero, rank_number__isnull=False)
+		return ret_filter
 
 
 class Game(models.Model):

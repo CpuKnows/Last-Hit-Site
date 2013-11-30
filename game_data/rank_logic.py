@@ -1,23 +1,11 @@
-from django.db.models import F, Q, Max, Avg
+from django.db.models import F, Q, Max, Min, Avg
 
 from .models import Player, Hero, Game
 
 
 def add_update_hero_ranking(game_in):
 	replaced_rank = 0
-	
-	ranked_game = Game.objects.ranked(player=game_in.player, hero=game_in.hero)
-	
-	# A previously ranked game exists
-	if len(ranked_game) != 0:
-		if (ranked_game[0].last_hits < game_in.last_hits or (ranked_game[0].last_hits == game_in.last_hits and ranked_game[0].gpm < game_in.gpm)):
-			replaced_rank = ranked_game[0].rank_number
-			ranked_game[0].rank_number = None
-			ranked_game[0].save()
-		else:
-			# Submitted game is not better than currently ranked game
-			return
-	
+
 	hero_rank_list = Game.objects.ranked(hero=game_in.hero)
 	
 	# First game with hero by any player
@@ -25,32 +13,42 @@ def add_update_hero_ranking(game_in):
 		game_in.rank_number = 1
 		game_in.save()
 		return
-		
-	if replaced_rank != 0:
-		hero_rank_list = hero_rank_list.worse_rank(replaced_rank)
-	
-	hero_rank_list = hero_rank_list.worse_games(game_in.last_hits, game_in.gpm)
-	hero_rank_list = hero_rank_list.order_by('-last_hits', '-gpm', '-pub_date')
-	
+
+	hero_rank_list = hero_rank_list.filter(player=game_in.player)
+
+	# A previously ranked game exists
+	if len(hero_rank_list) != 0:
+		if (hero_rank_list[0].last_hits < game_in.last_hits or (hero_rank_list[0].last_hits == game_in.last_hits and hero_rank_list[0].gpm < game_in.gpm)):
+			worse_games = Game.objects.worse_rank(hero_rank_list[0].hero, hero_rank_list[0].rank_number)
+			hero_rank_list[0].rank_number = None
+			hero_rank_list[0].save()
+			worse_games.update(rank_number=F('rank_number') - 1)
+			for game in worse_games:
+				game.save()
+			return add_update_hero_ranking(game_in)
+		else:
+			# Submitted game is not better than currently ranked game
+			return
+
+	worse_games = Game.objects.worse_games(game_in.hero, game_in.last_hits, game_in.gpm)
+	worse_games.order_by('-last_hits', '-gpm', '-pub_date')
+
 	# No worse games
-	if len(hero_rank_list) == 0:
-		lowest_rank = Game.objects.ranked().aggregate(Max('rank_number'))
+	if len(worse_games) == 0:
+		lowest_rank = Game.objects.ranked(hero=game_in.hero).aggregate(Max('rank_number'))
 		game_in.rank_number = lowest_rank['rank_number__max'] + 1
 		game_in.save()
 		return
-	
-	rows_updated = hero_rank_list.update(rank_number=F('rank_number') + 1)
-	
-	if rows_updated == 0:
-		game_in.rank_number = replaced_rank
+
+	else:
+		#new_game_rank = hero_rank_list[0].rank_number
+		worse_games.update(rank_number=F('rank_number') + 1)
+		for game in worse_games:
+			game.save()
+
+		new_rank = worse_games.aggregate(Min('rank_number'))
+		game_in.rank_number = new_rank['rank_number__min'] - 1
 		game_in.save()
-		return
-		
-	game_in.rank_number = hero_rank_list[0].rank_number - 1
-	game_in.save()
-	
-	for game in hero_rank_list:
-		game.save()
 
 
 def delete_update_hero_rank(game_in):
@@ -74,10 +72,11 @@ def delete_update_hero_rank(game_in):
 			add_update_hero_ranking(game_to_rank[0])
 
 
-def update_player_rank(game_in):
+def add_update_player_rank(player_in):
 	
-	all_player_games = Game.objects.filter(player=game_in.player).order_by('-pub_date')
+	all_player_games = Game.objects.filter(player=player_in).order_by('-pub_date')
 	num_games = all_player_games.count()
+
 	if num_games < 10:
 		weighted_game_num = num_games
 	else:
@@ -88,30 +87,50 @@ def update_player_rank(game_in):
 	averages = all_player_games.aggregate(Avg('last_hits'), Avg('gpm'))
 	avg_last_hits_new = averages['last_hits__avg']
 	avg_gpm_new = averages['gpm__avg']
+
+	if avg_last_hits_new is None or avg_gpm_new is None:
+		avg_last_hits_new = 0
+		avg_gpm_new = 0
 	
 	for x in range(weighted_game_num):
 		avg_last_hits_new += (weighted_games[x].last_hits * (2.0 - (x * 0.1)))
 		avg_gpm_new += (weighted_games[x].gpm * (2.0 - (x * 0.1)))
 	
-	game_in.player.avg_last_hits = avg_last_hits_new
-	game_in.player.avg_gpm = avg_gpm_new
+	player_in.avg_last_hits = avg_last_hits_new
+	player_in.avg_gpm = avg_gpm_new
 	
 	worse_player_list = Player.objects.worse_avg(avg_last_hits_new, avg_gpm_new)
 	worse_player_list = worse_player_list.order_by('-avg_last_hits', '-avg_gpm', 'overall_rank')
 	
 	if len(worse_player_list) == 0:
 		lowest_rank = Player.objects.ranked().aggregate(Max('overall_rank'))
-		if lowest_rank['overall_rank__max'] is not None:
-			game_in.player.overall_rank = lowest_rank['overall_rank__max'] + 1
+		if num_games == 0:
+			player_in.overall_rank = None
+		elif lowest_rank['overall_rank__max'] is not None:
+			player_in.overall_rank = lowest_rank['overall_rank__max'] + 1
 		else:
-			game_in.player.overall_rank = 1
-		game_in.player.save()
+			player_in.overall_rank = 1
+		player_in.save()
 		return
 	
 	worse_player_list.update(overall_rank=F('overall_rank') + 1)
 	
-	game_in.player.overall_rank = worse_player_list[0].overall_rank - 1
-	game_in.player.save()
+	player_in.overall_rank = worse_player_list[0].overall_rank - 1
+	player_in.save()
 	
 	for player in worse_player_list:
 		player.save()
+
+
+def delete_update_player_rank(player_in):
+
+	if player_in.overall_rank is not None:
+		worse_player_list = Player.objects.worse_rank(player_in.overall_rank)
+		worse_player_list.update(overall_rank=F('overall_rank') - 1)
+
+		for player in worse_player_list:
+			player.save()
+
+		player_in.overall_rank = None
+		player_in.save()
+		add_update_player_rank(player_in)
