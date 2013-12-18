@@ -25,7 +25,6 @@ class IndexView(ListView):
 		context = super(IndexView, self).get_context_data(**kwargs)
 		context['hero_list'] = Hero.objects.all()
 		context['player_list'] = Player.objects.select_related('player_acct__gamer_tag').all()
-		context['hero_table_widths'] = range(0, 200, 5)
 		return context
 		
 	

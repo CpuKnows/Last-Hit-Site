@@ -1,15 +1,24 @@
 {% extends "game_data/base.html" %}
 
-{% block title %}Login{% endblock %}
+{% block css_includes %}
+    {{ block.super }}
+    {% load staticfiles %}
+    <link href="{% static 'game_data/css/login.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block title %}{% endblock %}
 
 
 {% block content %}
 
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
-<form action="{% url 'game_data:login' %}" method="post">
+<form class="form-signin" action="{% url 'game_data:login' %}" method="post">
 	{% csrf_token %}
-	<table>
+	<h2 class="form-signin-heading">Please sign in</h2>
+    <input id="{{ form.username.id_for_label }}" name="{{ form.username.html_name }}" type="text" class="form-control" placeholder="{{ form.username.label }}" required="" autofocus="">
+    <input id="{{ form.password.id_for_label }}" name="{{ form.password.html_name }}" type="password" class="form-control" placeholder="{{ form.password.label }}" required="">
+    <!--<table>
 	<tr>
 		<td>{{ form.username.label_tag }}</td>
 		<td>{{ form.username }}</td>
@@ -18,8 +27,9 @@
 		<td>{{ form.password.label_tag }}</td>
 		<td>{{ form.password }}</td>
 	</tr>
-	</table>
-	<input type="submit" value="Submit" />
+	</table>-->
+	<button class="btn btn-lg btn-default btn-block" type="submit">Sign in</button>
+    <!--<input type="submit" value="Submit" />-->
 	<input type="hidden" name="next" value=" {{next}} " />
 </form>
 

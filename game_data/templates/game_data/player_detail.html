@@ -10,30 +10,30 @@
 {% block content %}
 
 {% if player_game_list %}
-	<table>
-	<tr>
-		<td><strong>Rank</strong></td>
-		<td><strong>Hero</strong></td>
-		<td><strong>Last Hits</strong></td>
-		<td><strong>GPM</strong></td>
-		<td><strong>Published</strong></td>
-	</tr>
+	<table class="table">
+	<thead>
+		<th>Rank</th>
+		<th>Hero</th>
+		<th>Last Hits</th>
+		<th>GPM</th>
+		<th>Published</th>
+	</thead>
     {% for game in player_game_list %}
-		<tr>
+		<tbody>
 			{% if game.rank_number == None %}
 				<td></td>
 			{% else %}
 				<td>{{ game.rank_number }}</td>
 			{% endif %}
 			<td><a href="{% url 'game_data:hero_detail' game.hero.hero_name_underscored %}">
-				<img id="base_{{game.hero.hero_name_underscored}}" 
+				<img id="base_{{game.hero.hero_name_underscored}}"
 					src="{% static 'game_data/image/'|add:game.hero.hero_name_underscored|add:'_sb.png' %}">
 				</a>
 			</td>
 			<td>{{ game.last_hits }}</td>
 			<td>{{ game.gpm }}</td>
 			<td>{{ game.pub_date|timesince }}</td>
-		</tr>
+		</tbody>
     {% endfor %}
 	</table>
     
